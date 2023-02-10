@@ -5,10 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: 'gomod' # See documentation for possible values
-    directory:
-      - '/'
-      - '/contacts/'
-      - '/integrations/'
+  - package-ecosystem: 'gomod'
+    directory: '/contacts/'
+    schedule:
+      interval: 'weekly'
+  - package-ecosystem: 'terraform'
+    directory: '/infra'
+    schedule:
+      interval: 'weekly'
+  - package-ecosystem: 'gomod'
+    directory: '/integrations/'
     schedule:
       interval: 'weekly'
