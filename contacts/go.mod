@@ -18,7 +18,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/pkg/errors v0.9.1
-	github.com/rs/cors v1.8.2
+	github.com/rs/cors v1.8.3
 	github.com/spf13/cobra v1.5.0
 	github.com/typesense/typesense-go v0.6.1
 	go.uber.org/zap v1.23.0
