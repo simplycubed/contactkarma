@@ -9,5 +9,6 @@ updates:
     directory:
       - '/'
       - '/contacts/'
+      - '/integrations/'
     schedule:
       interval: 'weekly'

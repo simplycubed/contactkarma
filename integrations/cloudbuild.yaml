@@ -1,0 +1,44 @@
+steps:
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    args:
+      - gcloud
+      - functions
+      - deploy
+      - OnCreateAuthUser
+      - --set-env-vars
+      - GCP_PROJECT=$PROJECT_ID
+      - --entry-point
+      - OnCreateAuthUser
+      - --source=.
+      - --trigger-event
+      - providers/firebase.auth/eventTypes/user.create
+      - --trigger-resource
+      - $PROJECT_ID
+      - --runtime
+      - go116
+      - --region
+      - us-central1
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    args:
+      - gcloud
+      - functions
+      - deploy
+      - OnWriteUnified
+      - --set-env-vars
+      - GCP_PROJECT=$PROJECT_ID
+      - --set-env-vars
+      - TYPESENSE_HOST=${_TYPESENSE_HOST}
+      - --set-env-vars
+      - TYPESENSE_API_KEY=${_TYPESENSE_API_KEY}
+      - --entry-point
+      - OnWriteUnified
+      - --source=.
+      - --trigger-event
+      - providers/cloud.firestore/eventTypes/document.write
+      - --trigger-resource
+      - projects/$PROJECT_ID/databases/(default)/documents/users/{userId}/unified/{unifiedId}
+      - --runtime
+      - go116
+      - --region
+      - us-central1
+    waitFor: ['-']
