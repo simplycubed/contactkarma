@@ -1,0 +1,99 @@
+{
+  "names": {
+    "display_name": "John Smith",
+    "display_name_last_first": "Smith, John",
+    "family_name": "Smith",
+    "given_name": "John",
+    "honorific_prefix": "Mr.",
+    "honorific_suffix": "",
+    "middle_name": "Michael",
+    "phonetic_family_name": "Smith",
+    "phonetic_full_name": "John Smith",
+    "phonetic_given_name": "John",
+    "phonetic_honorific_prefix": "Mr.",
+    "phonetic_honorific_suffix": "",
+    "phonetic_middle_name": "Michael",
+    "unstructured_name": "John M. Smith"
+  },
+  "nicknames": [
+    {
+      "type": "DEFAULT",
+      "value": "John"
+    }
+  ],
+  "addresses": [
+    {
+      "city": "Mihama",
+      "country": "Japan",
+      "country_code": "JP",
+      "extended_address": "",
+      "po_box": "",
+      "postal_code": "2610005",
+      "region": "Chiba",
+      "street_address": "123 Fake Dr.",
+      "type": "home"
+    }
+  ],
+  "birthdays": {
+    "date": "1977-01-01",
+    "text": ""
+  },
+  "email_addresses": [
+    {
+      "display_name": "John Smith",
+      "type": "home",
+      "value": "js@contactkarma.co"
+    }
+  ],
+  "genders": {
+    "address_me_as": "he/him",
+    "value": "male"
+  },
+  "occupations": [
+    {
+      "value": "Hacker"
+    }
+  ],
+  "organizations": [
+    {
+      "cost_center": "",
+      "is_current": true,
+      "department": "",
+      "domain": "https://contactkarma.co",
+      "end_date": "",
+      "fulltime_equivalent_milli_percent": 0,
+      "job_description": "",
+      "location": "Japan",
+      "name": "Contact Karma",
+      "phonetic_name": "Contact Karma",
+      "start_date": "2022-01-01",
+      "symbol": "CK",
+      "title": "Hacker",
+      "type": "work"
+    }
+  ],
+  "phones": [
+    {
+      "type": "home",
+      "value": "+81-1234-1111"
+    }
+  ],
+  "photos": [
+    {
+      "default": true,
+      "url": "https://lh3.googleusercontent.com/-T_wVWLlmg7w/AAAAAAAAAAI/AAAAAAAABa8/00gzXvDBYqw/s100/photo.jpg?sz=50"
+    }
+  ],
+  "relations": [
+    {
+      "person": "Jane Smith",
+      "type": "spouse"
+    }
+  ],
+  "urls": [
+    {
+      "type": "work",
+      "value": "https://contactkarma.co/"
+    }
+  ]
+}

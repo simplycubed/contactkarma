@@ -1,0 +1,86 @@
+{
+  "addresses": [
+    {
+      "city": "Mihama",
+      "country": "Japan",
+      "country_code": "JP",
+      "id": "gqHIeaZGyA221t1Zk45EMCzlRCnyOFY_u0FxtzQm8fc",
+      "postal_code": "2610005",
+      "region": "Chiba",
+      "street_address": "123 Fake Dr.",
+      "type": "home"
+    }
+  ],
+  "birthdays": { "date": "1977-01-01" },
+  "email_addresses": [
+    {
+      "display_name": "Charles Green",
+      "id": "2MD8AC1kMeJZl4qWquV__fP9PGn13MIlzd1uSeFYG7g",
+      "type": "home",
+      "value": "cg@contactkarma.co"
+    }
+  ],
+  "genders": { "address_me_as": "he/him", "value": "male" },
+  "id": "OutSvpc5Q3PHGXCbT8V2Yf40JdJ2",
+  "names": {
+    "display_name": "Charles Green",
+    "display_name_last_first": "Green, Charles",
+    "family_name": "Green",
+    "given_name": "Charles",
+    "honorific_prefix": "Mr.",
+    "id": "de034c89597f",
+    "middle_name": "Michael",
+    "phonetic_family_name": "Green",
+    "phonetic_full_name": "Charles Green",
+    "phonetic_given_name": "Charles",
+    "phonetic_honorific_prefix": "Mr.",
+    "phonetic_middle_name": "Michael",
+    "unstructured_name": "Charles M. Green"
+  },
+  "nicknames": [
+    {
+      "id": "6yLegMk2FaQMzI3mlX6F0qenNitu_ca_ZLubIp7w3mE",
+      "type": "DEFAULT",
+      "value": "Charles"
+    }
+  ],
+  "occupations": [
+    { "id": "rG_mnSAbqBi8PtYHZDxWmMa-zrvBDCryLKxB1LmV3O0", "value": "Hacker" }
+  ],
+  "organizations": [
+    {
+      "domain": "https://contactkarma.co",
+      "id": "DhoXeWRiAqVSRquKaaBI4IQ2691yx77klOCOj_8Yb5g",
+      "is_current": true,
+      "location": "Japan",
+      "name": "Contact Karma",
+      "phonetic_name": "Contact Karma",
+      "start_date": "2022-01-01",
+      "symbol": "CK",
+      "title": "Hacker",
+      "type": "work"
+    }
+  ],
+  "phone_numbers": null,
+  "photos": [
+    {
+      "default": true,
+      "id": "k4iH8INUn-bxlsYgSF6l1Us6Ib2dGZNObtM3NmNpKdU",
+      "url": "https://lh3.googleusercontent.com/-T_wVWLlmg7w/AAAAAAAAAAI/AAAAAAAABa8/00gzXvDBYqw/s100/photo.jpg?sz=50"
+    }
+  ],
+  "relations": [
+    {
+      "id": "9MBCcjNDhooaG1JreK7Qn4BFeWiXD5iPUz3f5DhLQvU",
+      "person": "Yumi Green",
+      "type": "spouse"
+    }
+  ],
+  "urls": [
+    {
+      "id": "hgpbsWi59DR9DfDRzfTXtd22jNgIWDiF6hJWBMiVxvo",
+      "type": "work",
+      "value": "https://contactkarma.co/"
+    }
+  ]
+}

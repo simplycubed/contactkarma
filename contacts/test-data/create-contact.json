@@ -1,0 +1,96 @@
+{
+  "names": {
+    "display_name": "Joe Contact",
+    "display_name_last_first": "Contact, Joe",
+    "family_name": "Contact",
+    "given_name": "Joe",
+    "honorific_prefix": "",
+    "honorific_suffix": "",
+    "middle_name": "",
+    "phonetic_family_name": "",
+    "phonetic_full_name": "",
+    "phonetic_given_name": "",
+    "phonetic_honorific_prefix": "",
+    "phonetic_honorific_suffix": "",
+    "phonetic_middle_name": "",
+    "unstructured_name": "Joe Contact"
+  },
+  "nicknames": [
+    {
+      "type": "DEFAULT",
+      "value": "Joe"
+    }
+  ],
+  "addresses": [
+    {
+      "type": "home",
+      "city": "Some city",
+      "country": "Japan",
+      "country_code": "JP",
+      "extended_address": "",
+      "po_box": "",
+      "postal_code": "260-0005",
+      "region": "Chiba",
+      "street_address": "123 Fake Dr."
+    }
+  ],
+  "birthdays": [
+    {
+      "date": "1900-01-15",
+      "text": ""
+    }
+  ],
+  "email_addresses": [
+    {
+      "display_name": "Joe Contact",
+      "type": "work",
+      "value": "joe.contact@contactkarma.co"
+    },
+    {
+      "display_name": "Joe Contact",
+      "type": "home",
+      "value": "joe.contact@test.com"
+    }
+  ],
+  "genders": [
+    {
+      "address_me_as": "male",
+      "value": "he/him"
+    }
+  ],
+  "occupations": [
+    {
+      "value": "student"
+    }
+  ],
+  "organizations": [
+    {
+      "is_current": true,
+      "department": "",
+      "domain": "https://someschool.edu",
+      "end_date": "",
+      "job_description": "",
+      "location": "string",
+      "name": "string",
+      "phonetic_name": "",
+      "start_date": "2020-01-15",
+      "symbol": "",
+      "title": "Student",
+      "type": "school"
+    }
+  ],
+  "phone_numbers": [
+    {
+      "type": "mobile",
+      "value": "+81-080-4456-1111"
+    }
+  ],
+  "photos": [],
+  "relations": [],
+  "urls": [
+    {
+      "type": "blog",
+      "value": "https://myblog.com"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+version: "3"
+services:
+  emulator:
+    image: gcr.io/$PROJECT_ID/firebase-emulators:latest
+    environment:
+      FIRESTORE_PROJECT_NAME: test
+    ports:
+      - 5001
+      - 9000
+      - 9090 # firstore
+      - 8085
+      - 4000
+    command: 'firebase emulators:start --only firestore,storage,auth,pubsub --project test'
+    tty: true
+    restart: unless-stopped
+  typesense:
+    image: typesense/typesense:0.23.0
+    command: '--data-dir /data --api-key=test --enable-cors'
+    volumes:
+      - typesense_data:/data
+    ports:
+      - 8108:8108
+
+networks:
+  default:
+    external:
+      name: cloudbuild
+
+volumes:
+  typesense_data:

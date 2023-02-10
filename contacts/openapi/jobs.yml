@@ -1,0 +1,132 @@
+swagger: "2.0"
+info:
+  title: Contact Karma Service
+  version: "1.0.0"
+  description: contact karma service
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - http
+  - https
+paths:
+  /pull-contacts:
+    post:
+      summary: publish pull-contact-source for contact-sources
+      operationId: pull-contacts
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/PubsubMessage"
+      responses:
+        "200":
+          description: Triggered
+          schema:
+            $ref: "#/definitions/JobSuccess"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/JobError"
+  /pull-contact-source:
+    post:
+      summary: sync all contacts from a contact source
+      operationId: pull-contact-source
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/PubsubMessage"
+      responses:
+        "200":
+          description: Triggered
+          schema:
+            $ref: "#/definitions/JobSuccess"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/JobError"
+  /contact-source-clean-up:
+    post:
+      summary: clean up job after deleting a contact source
+      operationId: contact-source-clean-up
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/PubsubMessage"
+      responses:
+        "200":
+          description: Triggered
+          schema:
+            $ref: "#/definitions/JobSuccess"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/JobError"
+       
+definitions:
+  JobSuccess:
+    type: object
+    title: message
+    properties:
+      message:
+        type: string
+  JobError:
+    type: object
+    title: JobError
+    properties:
+      error:
+        type: string
+      description:
+        type: string
+  PullContactsRequest:
+    type: object
+    title: PullContactsRequest
+    properties:
+      userId:
+        type: string
+      contactSourceId:
+        type: string
+  ContactSourceDeleted:
+    type: object
+    title: ContactSourceDeleted
+    properties:
+      userId:
+        type: string
+      contactSourceId:
+        type: string
+      source:
+        type: string
+      removeContactsFromUnified:
+        type: boolean
+  PubsubMessage:
+    type: object
+    title: PubsubMessage
+    properties:
+      message:
+        type: object
+        $ref: "#/definitions/Message"
+      subscription:
+        type: string
+  Message:
+    type: object
+    title: Message
+    required:
+      - "messageId"
+    properties:
+      messageId:
+        type: string
+      data:
+        type: string
+        format: byte
+      attributes:
+        type: object
+      publishTime:
+        type: string
+        format: date-time
+      deliveryAttempt:
+        type: integer
+      orderingKey:
+        type: string

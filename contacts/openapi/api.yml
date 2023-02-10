@@ -1,0 +1,1687 @@
+swagger: "2.0"
+info:
+  title: Contact Karma Service
+  version: "1.0.0"
+  description: contact karma service
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - http
+  - https
+paths:
+  /users:
+    post:
+      summary: create user
+      operationId: create-user
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Created
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    patch:
+      summary: update user
+      operationId: update-user
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /users/{user_id}:
+    get:
+      summary: get user
+      operationId: get-user
+      parameters:
+        - in: path
+          name: user_id
+          type: string
+          required: true
+          description: "user id"
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+      responses:
+        "200":
+          description: retrieved
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      summary: delete user
+      operationId: delete-user
+      parameters:
+        - in: path
+          name: user_id
+          type: string
+          required: true
+          description: "user id"
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: "#/definitions/Message"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /unified/{unified_id}:
+    get:
+      summary: get user's contact by id
+      operationId: get-user-contact-by-id
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+      responses:
+        "200":
+          description: Retrieved
+          schema:
+            $ref: "#/definitions/Unified"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    patch:
+      summary: update user's contact by id
+      operationId: update-user-contact
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/UpdateUnifiedDto"
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: "#/definitions/Unified"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      summary: delete user's contact by id
+      operationId: delete-user-contact
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: "#/definitions/Message"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /unified/{unified_id}/category:
+    patch:
+      summary: update category
+      operationId: update-contact-category
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/UpdateCategoryDto"
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: "#/definitions/Unified"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /unified/{unified_id}/notes:
+    get:
+      summary: get contact notes
+      operationId: get-contact-notes
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: query
+          name: limit
+          type: integer
+          required: false
+        - in: query
+          name: last_document_id
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Retrieved
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Note"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      summary: post contact note
+      operationId: post-contact-note
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/Note"
+      responses:
+        "200":
+          description: Created
+          schema:
+            $ref: "#/definitions/Message"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /unified/{unified_id}/notes/{note_id}:
+    patch:
+      summary: patch contact note
+      operationId: patch-contact-note
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: path
+          name: note_id
+          type: string
+          required: true
+          description: "note id"
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/Note"
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: "#/definitions/Note"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      summary: delete contact note
+      operationId: delete-contact-note
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: path
+          name: note_id
+          type: string
+          required: true
+          description: "note id"
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: "#/definitions/Message"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /unified/{unified_id}/tags/{tag_id}:
+    patch:
+      summary: patch contact tag
+      operationId: patch-contact-tag
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: path
+          name: tag_id
+          type: string
+          required: true
+          description: "tag id"
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/Tag"
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: "#/definitions/Tag"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      summary: delete contact tag
+      operationId: delete-contact-tag
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: path
+          name: tag_id
+          type: string
+          required: true
+          description: "tag id"
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: "#/definitions/Message"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /unified/{unified_id}/tags:
+    get:
+      summary: get contact tags
+      operationId: get-contact-tags
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: query
+          name: limit
+          type: integer
+          required: false
+        - in: query
+          name: last_document_id
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Retrieved
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Tag"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      summary: post contact tag
+      operationId: post-contact-tag
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: unified_id
+          type: string
+          required: true
+          description: "contact id"
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/Tag"
+      responses:
+        "200":
+          description: Created
+          schema:
+            $ref: "#/definitions/Message"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /contacts/sources/google/init:
+    get:
+      summary: returns redirect url
+      operationId: init-google-contact-source
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+      responses:
+        "200":
+          description: Init Response
+          schema:
+            $ref: "#/definitions/InitResponse"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /contacts/sources/google/link:
+    post:
+      summary: redirects user to google consent page
+      operationId: link-google-contact-source
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              auth_code:
+                type: string
+      responses:
+        "200":
+          description: Linked
+          headers:
+            Location:
+              type: "string"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "403":
+          description: quota limit reached
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /contacts/sources:
+    get:
+      summary: get user's contact source list
+      operationId: get-contact-sources
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: query
+          name: limit
+          type: integer
+          required: false
+        - in: query
+          name: last_document_id
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Retrieved
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ContactSource"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /contacts/sources/{source_id}:
+    delete:
+      summary: delete contact source by id
+      operationId: delete-contact-source
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: source_id
+          type: string
+          required: true
+          description: "source id"
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              remove_from_unified:
+                type: boolean
+                description: "flag to indicate whether contacts should be removed from unified as well"
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            $ref: "#/definitions/Message"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /contacts/upload-csv:
+    post:
+      summary: upload contacts csv
+      operationId: upload-contacts-csv
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - name: file
+          in: formData
+          description: The uploaded file data
+          required: true
+          type: file
+      responses:
+        "200":
+          description: Uploaded
+          schema:
+            $ref: "#/definitions/Message"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /pending:
+    get:
+      summary: get pending follow ups
+      operationId: get-pending-follow-ups
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: query
+          name: limit
+          type: integer
+          required: false
+        - in: query
+          name: last_document_next_contact
+          type: string
+          format: date-time
+          required: false
+        - in: query
+          name: last_document_id
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Retrieved
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Unified"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /recent:
+    get:
+      summary: get pending follow ups
+      operationId: get-recent-contacts
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: query
+          name: max_days
+          type: integer
+        - in: query
+          name: limit
+          type: integer
+          required: false
+        - in: query
+          name: last_document_last_contact
+          type: string
+          format: date-time
+          required: false
+        - in: query
+          name: last_document_id
+          type: string
+          required: false
+
+      responses:
+        "200":
+          description: Retrieved
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Unified"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /unified:
+    get:
+      summary: get unified list of contacts
+      operationId: get-unified-contacts
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: query
+          name: limit
+          type: integer
+          required: false
+        - in: query
+          name: last_document_id
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Retrieved
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Unified"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      summary: create user's contact
+      operationId: create-user-contact
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/CreateContactDto"
+      responses:
+        "200":
+          description: Created
+          schema:
+            $ref: "#/definitions/Unified"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /search:
+    post:
+      summary: search user's contact
+      operationId: search-user-contact
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/SearchContactDto"
+      responses:
+        "200":
+          description: Created
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Unified"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+   
+  /suggestions:
+    get:
+      summary: get list of contact link suggestions to remove duplicates
+      operationId: get-link-suggestions
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: query
+          name: limit
+          type: integer
+          required: false
+        - in: query
+          name: last_document_id
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Retrieved
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/LinkSuggestion"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /suggestions/{suggestion_id}/apply:
+    post:
+      summary: redirects user to google consent page
+      operationId: apply-link-suggestion
+      parameters:
+        - in: header
+          name: X-Apigateway-Api-Userinfo
+          type: string
+          required: true
+        - in: path
+          name: suggestion_id
+          type: string
+          required: true
+          description: "suggestion id"
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              unified_ids:
+                type: array
+                items:
+                  type: string
+      responses:
+        "200":
+          description: Applied
+          headers:
+            Location:
+              type: "string"
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "401":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+definitions:
+  ContactCategory:
+    type: string
+    enum:
+      - A
+      - B
+      - C
+      - D
+  User:
+    title: User
+    type: object
+    properties:
+      id:
+        type: string
+      names:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserNames"
+      nicknames:
+        type: "array"
+        items:
+          $ref: "#/definitions/Nickname"
+      addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/Address"
+      birthdays:
+        type: "array"
+        items:
+          $ref: "#/definitions/Birthday"
+      email_addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/EmailAddress"
+      genders:
+        type: "array"
+        items:
+          $ref: "#/definitions/Gender"
+      occupations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Occupation"
+      organizations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Organization"
+      phone_numbers:
+        type: "array"
+        items:
+          $ref: "#/definitions/PhoneNumber"
+      photos:
+        type: "array"
+        items:
+          $ref: "#/definitions/Photo"
+      relations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Relation"
+      urls:
+        type: "array"
+        items:
+          $ref: "#/definitions/Url"
+      quota:
+        $ref: "#/definitions/Quota"
+  Quota:
+    title: quota
+    type: object
+    properties:
+      total_contacts:
+        type: integer
+      total_category_assigned:
+        type: integer
+  Contact:
+    title: User
+    type: object
+    properties:
+      id:
+        type: string
+      names:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserNames"
+      nicknames:
+        type: "array"
+        items:
+          $ref: "#/definitions/Nickname"
+      addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/Address"
+      birthdays:
+        type: "array"
+        items:
+          $ref: "#/definitions/Birthday"
+      email_addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/EmailAddress"
+      genders:
+        type: "array"
+        items:
+          $ref: "#/definitions/Gender"
+      occupations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Occupation"
+      organizations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Organization"
+      phone_numbers:
+        type: "array"
+        items:
+          $ref: "#/definitions/PhoneNumber"
+      photos:
+        type: "array"
+        items:
+          $ref: "#/definitions/Photo"
+      relations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Relation"
+      urls:
+        type: "array"
+        items:
+          $ref: "#/definitions/Url"
+      next_contact:
+        type: "string"
+        format: "date-time"
+      last_contact:
+        type: "string"
+        format: "date-time"
+      score:
+        type: integer
+      category:
+        $ref: "#/definitions/ContactCategory"
+  UpdateUnifiedDto:
+    title: UpdateUnifiedDto
+    type: object
+    properties:
+      names:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserNames"
+      nicknames:
+        type: "array"
+        items:
+          $ref: "#/definitions/Nickname"
+      addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/Address"
+      birthdays:
+        type: "array"
+        items:
+          $ref: "#/definitions/Birthday"
+      email_addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/EmailAddress"
+      genders:
+        type: "array"
+        items:
+          $ref: "#/definitions/Gender"
+      occupations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Occupation"
+      organizations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Organization"
+      phone_numbers:
+        type: "array"
+        items:
+          $ref: "#/definitions/PhoneNumber"
+      photos:
+        type: "array"
+        items:
+          $ref: "#/definitions/Photo"
+      relations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Relation"
+      urls:
+        type: "array"
+        items:
+          $ref: "#/definitions/Url"
+      next_contact:
+        type: "string"
+        format: "date-time"
+      last_contact:
+        type: "string"
+        format: "date-time"
+      score:
+        type: integer
+      display_name:
+        type: "string"
+  CreateContactDto:
+    title: CreateContactDto
+    type: object
+    properties:
+      names:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserNames"
+      nicknames:
+        type: "array"
+        items:
+          $ref: "#/definitions/Nickname"
+      addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/Address"
+      birthdays:
+        type: "array"
+        items:
+          $ref: "#/definitions/Birthday"
+      email_addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/EmailAddress"
+      genders:
+        type: "array"
+        items:
+          $ref: "#/definitions/Gender"
+      occupations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Occupation"
+      organizations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Organization"
+      phone_numbers:
+        type: "array"
+        items:
+          $ref: "#/definitions/PhoneNumber"
+      photos:
+        type: "array"
+        items:
+          $ref: "#/definitions/Photo"
+      relations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Relation"
+      urls:
+        type: "array"
+        items:
+          $ref: "#/definitions/Url"
+      next_contact:
+        type: "string"
+        format: "date-time"
+      last_contact:
+        type: "string"
+        format: "date-time"
+      score:
+        type: integer
+      display_name:
+        type: "string"
+  UpdateCategoryDto:
+    title: UpdateCategoryDto
+    type: object
+    properties:
+      category:
+        $ref: "#/definitions/ContactCategory"
+  SearchFilter:
+    type: object
+    properties:
+      field: 
+        type: string
+        enum:
+          - category
+          - next_contact
+          - last_contact
+          - score
+          - birthday
+          - gender
+          - tag
+      operator:
+        type: string
+        # enum:
+        #   - "="
+        #   - ">"
+        #   - "<"
+        #   - ">="
+        #   - "<="
+        #   - "!="
+      value:
+        type: string
+  SearchSort:
+    type: object
+    properties:
+      field: 
+        type: string
+      order:
+        type: string
+        enum:
+          - asc
+          - desc
+  SearchContactDto:
+    title: SearchContactDto
+    type: object
+    properties:
+      query:
+        type: string
+      filters:
+        type: array
+        items:
+          $ref: "#/definitions/SearchFilter"
+      sort:
+        type: array
+        items:
+          $ref: "#/definitions/SearchSort"
+      page:
+        type: number
+      per_page:
+        type: number
+
+  Unified:
+    title: Unified Contact
+    type: object
+    properties:
+      id:
+        type: string
+      display_name:
+        type: string
+      names:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserNames"
+      nicknames:
+        type: "array"
+        items:
+          $ref: "#/definitions/Nickname"
+      addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/Address"
+      birthdays:
+        type: "array"
+        items:
+          $ref: "#/definitions/Birthday"
+      email_addresses:
+        type: "array"
+        items:
+          $ref: "#/definitions/EmailAddress"
+      genders:
+        type: "array"
+        items:
+          $ref: "#/definitions/Gender"
+      occupations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Occupation"
+      organizations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Organization"
+      phone_numbers:
+        type: "array"
+        items:
+          $ref: "#/definitions/PhoneNumber"
+      photos:
+        type: "array"
+        items:
+          $ref: "#/definitions/Photo"
+      relations:
+        type: "array"
+        items:
+          $ref: "#/definitions/Relation"
+      urls:
+        type: "array"
+        items:
+          $ref: "#/definitions/Url"
+      next_contact:
+        type: "string"
+        format: "date-time"
+      last_contact:
+        type: "string"
+        format: "date-time"
+      score:
+        type: integer
+      category:
+        type: string
+        enum:
+          - A
+          - B
+          - C
+          - D
+  UserNames:
+    type: object
+    properties:
+      display_name:
+        type: string
+        x-omitempty: true
+      display_name_last_first:
+        type: string
+        x-omitempty: true
+      family_name:
+        type: string
+        x-omitempty: true
+      given_name:
+        type: string
+        x-omitempty: true
+      honorific_prefix:
+        type: string
+        x-omitempty: true
+      honorific_suffix:
+        type: string
+        x-omitempty: true
+      middle_name:
+        type: string
+        x-omitempty: true
+      phonetic_family_name:
+        type: string
+        x-omitempty: true
+      phonetic_full_name:
+        type: string
+        x-omitempty: true
+      phonetic_given_name:
+        type: string
+        x-omitempty: true
+      phonetic_honorific_prefix:
+        type: string
+        x-omitempty: true
+      phonetic_honorific_suffix:
+        type: string
+        x-omitempty: true
+      phonetic_middle_name:
+        type: string
+        x-omitempty: true
+      unstructured_name:
+        type: string
+        x-omitempty: true
+  Nickname:
+    type: object
+    properties:
+      value:
+        type: string
+        x-omitempty: true
+  Address:
+    type: object
+    properties:
+      type:
+        type: string
+        x-omitempty: true
+      city:
+        type: string
+        x-omitempty: true
+      country:
+        type: string
+        x-omitempty: true
+      country_code:
+        type: string
+        x-omitempty: true
+      extended_address:
+        type: string
+        x-omitempty: true
+      po_box:
+        type: string
+        x-omitempty: true
+      postal_code:
+        type: string
+        x-omitempty: true
+      region:
+        type: string
+        x-omitempty: true
+      street_address:
+        type: string
+        x-omitempty: true
+  Birthday:
+    type: object
+    properties:
+      date:
+        type: string
+        x-omitempty: true
+      text:
+        type: string
+        x-omitempty: true
+  EmailAddress:
+    type: object
+    properties:
+      display_name:
+        type: string
+        x-omitempty: true
+      type:
+        type: string
+        x-omitempty: true
+      value:
+        type: string
+        x-omitempty: true
+  Gender:
+    type: object
+    properties:
+      address_me_as:
+        type: string
+        x-omitempty: true
+      value:
+        type: string
+        x-omitempty: true
+  Occupation:
+    type: "object"
+    properties:
+      value:
+        type: string
+        x-omitempty: true
+  Organization:
+    type: "object"
+    properties:
+      is_current:
+        type: boolean
+        x-omitempty: true
+      department:
+        type: string
+        x-omitempty: true
+      domain:
+        type: string
+      end_date:
+        type: string
+        x-omitempty: true
+      job_description:
+        type: string
+        x-omitempty: true
+      location:
+        type: string
+        x-omitempty: true
+      name:
+        type: string
+        x-omitempty: true
+      phonetic_name:
+        type: string
+        x-omitempty: true
+      start_date:
+        type: string
+        x-omitempty: true
+      symbol:
+        type: string
+        x-omitempty: true
+      title:
+        type: string
+        x-omitempty: true
+      type:
+        type: string
+        x-omitempty: true
+  PhoneNumber:
+    type: "object"
+    properties:
+      type:
+        type: string
+        x-omitempty: true
+      value:
+        type: string
+        x-omitempty: true
+  Photo:
+    type: "object"
+    properties:
+      default:
+        type: boolean
+        x-omitempty: true
+      url:
+        type: string
+        x-omitempty: true
+  Url:
+    type: "object"
+    properties:
+      type:
+        type: string
+        x-omitempty: true
+      value:
+        type: string
+        x-omitempty: true
+  Relation:
+    type: "object"
+    properties:
+      person:
+        type: string
+        x-omitempty: true
+      type:
+        type: string
+        x-omitempty: true
+  Note:
+    type: object
+    title: note
+    properties:
+      id:
+        type: string
+      note:
+        type: string
+      created_at:
+        type: string
+        format: "date-time"
+      is_updated:
+        type: boolean
+  Tag:
+    type: object
+    title: tag
+    properties:
+      id:
+        type: string
+      tag_name:
+        type: string
+      created_at:
+        type: string
+        format: "date-time"
+  Message:
+    type: object
+    title: message
+    properties:
+      message:
+        type: string
+  ContactSource:
+    type: object
+    title: contact-source
+    properties:
+      id:
+        type: string
+      user_id:
+        type: string
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      source:
+        type: string
+      email:
+        type: string
+  InitResponse:
+    type: object
+    title: init response
+    properties:
+      url:
+        type: string
+  ErrorResponse:
+    type: object
+    title: ErrorResponse
+    properties:
+      error:
+        type: string
+      description:
+        type: string
+  LinkMatch:
+    type: object
+    title: LinkMatch
+    properties:
+      unified_id:
+        type: string
+      display_name:
+        type: string
+  LinkSuggestion:
+    type: object
+    title: LinkSuggestion
+    properties:
+      id:
+        type: string
+      key:
+        type: string
+      value:
+        type: string
+      matches:
+        type: array
+        items:
+          $ref: "#/definitions/LinkMatch"
