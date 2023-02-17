@@ -21,7 +21,7 @@ require (
 	github.com/rs/cors v1.8.3
 	github.com/spf13/cobra v1.6.1
 	github.com/typesense/typesense-go v0.6.1
-	go.uber.org/zap v1.23.0
+	go.uber.org/zap v1.24.0
 	golang.org/x/net v0.6.0
 	google.golang.org/api v0.109.0
 	google.golang.org/grpc v1.53.0
