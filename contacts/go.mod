@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/firestore v1.9.0
 	cloud.google.com/go/pubsub v1.27.1
 	firebase.google.com/go v3.13.0+incompatible
-	github.com/brianvoe/gofakeit/v6 v6.19.0
+	github.com/brianvoe/gofakeit/v6 v6.20.1
 	github.com/go-openapi/errors v0.20.3
 	github.com/go-openapi/loads v0.21.2
 	github.com/go-openapi/runtime v0.24.1
