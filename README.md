@@ -11,7 +11,6 @@ This project contains the source for Contact Karma. Created and tested by Simply
 
 ## Components
 
-- [Infra](./infra/README.md)
 - [Contacts API](./contacts/README.md)
 - [Integrations](./integrations/README.md)
 

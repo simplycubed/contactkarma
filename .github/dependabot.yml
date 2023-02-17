@@ -9,10 +9,6 @@ updates:
     directory: '/contacts/'
     schedule:
       interval: 'weekly'
-  - package-ecosystem: 'terraform'
-    directory: '/infra'
-    schedule:
-      interval: 'weekly'
   - package-ecosystem: 'gomod'
     directory: '/integrations/'
     schedule:
