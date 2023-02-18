@@ -35,6 +35,7 @@ steps:
       - TYPESENSE_HOST=http://contacts_typesense_1:8108
       - TYPESENSE_API_KEY=test
   - name: 'gcr.io/cloud-builders/docker'
+    dir: 'contacts'
     args:
       - 'build'
       - '-t'
