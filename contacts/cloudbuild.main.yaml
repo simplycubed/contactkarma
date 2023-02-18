@@ -69,4 +69,4 @@ steps:
       - 'us-central1'
 timeout: 900s
 images:
-  - gcr.io/$PROJECT_ID/$REPO_NAME:$SHORT_SHA
+  - gcr.io/$PROJECT_ID/contacts:$SHORT_SHA
