@@ -1,5 +1,6 @@
 steps:
   - name: 'gcr.io/$PROJECT_ID/docker-compose'
+    dir: 'contacts'
     entrypoint: 'bash'
     args:
       [
@@ -9,6 +10,7 @@ steps:
     env:
       - 'PROJECT_ID=$PROJECT_ID'
   - name: 'gcr.io/$PROJECT_ID/golang:latest'
+    dir: 'contacts'
     entrypoint: go
     args: ['test', '-p', '1', '-cover', '-v', './...']
     env:

@@ -1,5 +1,6 @@
 steps:
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    dir: 'integrations'
     args:
       - gcloud
       - functions
@@ -19,6 +20,7 @@ steps:
       - --region
       - us-central1
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    dir: 'integrations'
     args:
       - gcloud
       - functions

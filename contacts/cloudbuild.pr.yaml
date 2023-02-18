@@ -1,5 +1,6 @@
 steps:
   - name: 'gcr.io/$PROJECT_ID/docker-compose'
+    dir: 'contacts'
     entrypoint: 'bash'
     args:
       [
@@ -9,6 +10,7 @@ steps:
     env:
       - 'PROJECT_ID=$PROJECT_ID'
   - name: 'gcr.io/$PROJECT_ID/golang:latest'
+    dir: 'contacts'
     entrypoint: go
     args: ['test', '-p', '1', '-cover', '-v', './...']
     env:
@@ -33,6 +35,7 @@ steps:
       - TYPESENSE_HOST=http://contacts_typesense_1:8108
       - TYPESENSE_API_KEY=test
   - name: 'gcr.io/$PROJECT_ID/golang:latest'
+    dir: 'contacts'
     entrypoint: go
     args: ['build', './...']
     env: ['PROJECT_ROOT=github.com/simplycubed/contactkarma/contacts']
