@@ -1,7 +1,7 @@
 version: "3"
 services:
   emulator:
-    image: gcr.io/contactkarma-dev/firebase-emulators:latest
+    image: gcr.io/contactkarma-dev/firebase-emulator:latest
     environment:
       FIRESTORE_PROJECT_NAME: test
     ports:
