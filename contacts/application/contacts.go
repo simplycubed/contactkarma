@@ -14,7 +14,7 @@ type contactService struct {
 	userRepo                 repository.IUser
 	defaultSourceContactRepo repository.IContact
 	unifiedRepo              repository.IUnified
-	unifiedContactSyncer     IUnifiedSyncer
+	unifiedContactSyncer     IUnifiedContactService
 	contactSourceProvider    IContactSourceProvider
 }
 
@@ -22,7 +22,7 @@ func NewContactService(
 	userRepo repository.IUser,
 	defaultSourceContactRepo repository.IContact,
 	unifiedRepo repository.IUnified,
-	unifiedContactSyncer IUnifiedSyncer,
+	unifiedContactSyncer IUnifiedContactService,
 	contactSourceProvider IContactSourceProvider,
 ) *contactService {
 	return &contactService{
@@ -48,7 +48,7 @@ func (a *contactService) SaveContact(ctx context.Context, uID domain.UserID, con
 		return nil, err
 	}
 
-	unified, err := a.unifiedContactSyncer.SyncContactToUnified(ctx, uID, domain.Default, firestore.DefaultContactSourceId, domain.ContactID(created.ID), *created)
+	unified, err := a.unifiedContactSyncer.Add(ctx, uID, domain.Default, firestore.DefaultContactSourceId, domain.ContactID(created.ID), *created)
 	if err != nil {
 		return
 	}
@@ -160,7 +160,11 @@ func (a *contactService) UpdateContact(ctx context.Context, uID domain.UserID, c
 		sourceId := domain.ContactOrigin(origin).SourceId()
 		contactId := domain.ContactOrigin(origin).ContactId()
 
-		err = a.contactSourceProvider.Get(source).Update(ctx, uID, sourceId, contactId, *updated)
+		err = a.contactSourceProvider.Get(source).Update(ctx, uID, sourceId, []domain.ContactSourceUpdate{{
+			ContactId: contactId,
+			Unified:   *updated,
+		}})
+
 		if err != nil {
 			return
 		}

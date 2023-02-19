@@ -49,3 +49,29 @@ func (service *PeopleService) Get(personId string) (person *people.Person, err e
 	person, err = personCall.Do()
 	return
 }
+
+func (service *PeopleService) BatchGet(personIds []string) (response *people.GetPeopleResponse, err error) {
+	batchGetCall := service.peopleService.People.GetBatchGet().ResourceNames(personIds...).PersonFields(service.personFields())
+	response, err = batchGetCall.Do()
+	return
+}
+
+func (service *PeopleService) BatchUpdate(updates map[string]people.Person) (response *people.BatchUpdateContactsResponse, err error) {
+	request := people.BatchUpdateContactsRequest{
+		Contacts:   updates,
+		ReadMask:   service.personFields(),
+		UpdateMask: service.updateFields(),
+	}
+	updateCall := service.peopleService.People.BatchUpdateContacts(&request)
+	response, err = updateCall.Do()
+	return
+}
+
+func (service *PeopleService) BatchDelete(personIds []string) (err error) {
+	request := people.BatchDeleteContactsRequest{
+		ResourceNames: personIds,
+	}
+	updateCall := service.peopleService.People.BatchDeleteContacts(&request)
+	_, err = updateCall.Do()
+	return
+}

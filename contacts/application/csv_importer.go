@@ -5,9 +5,9 @@ import (
 	"encoding/csv"
 	"io"
 
+	"github.com/gocarina/gocsv"
 	"github.com/simplycubed/contactkarma/contacts/adapters/firestore"
 	"github.com/simplycubed/contactkarma/contacts/domain"
-	"github.com/gocarina/gocsv"
 )
 
 type ICsvImporter interface {
@@ -16,10 +16,10 @@ type ICsvImporter interface {
 
 type CsvImporter struct {
 	defaultContactsRepo  *firestore.DefaultContactsFirestore
-	unifiedContactSyncer IUnifiedSyncer
+	unifiedContactSyncer IUnifiedContactService
 }
 
-func NewCsvImporter(defaultContactsRepo *firestore.DefaultContactsFirestore, unifiedContactSyncer IUnifiedSyncer) *CsvImporter {
+func NewCsvImporter(defaultContactsRepo *firestore.DefaultContactsFirestore, unifiedContactSyncer IUnifiedContactService) *CsvImporter {
 	return &CsvImporter{
 		defaultContactsRepo:  defaultContactsRepo,
 		unifiedContactSyncer: unifiedContactSyncer,
@@ -54,7 +54,7 @@ func (importer *CsvImporter) Import(ctx context.Context, reader io.Reader, userI
 		}
 
 		// create/update unified contact, generating link suggestions
-		_, err = importer.unifiedContactSyncer.SyncContactToUnified(ctx, userId, domain.Default, firestore.DefaultContactSourceId, domain.ContactID(createdContact.ID), contact)
+		_, err = importer.unifiedContactSyncer.Add(ctx, userId, domain.Default, firestore.DefaultContactSourceId, domain.ContactID(createdContact.ID), contact)
 		if err != nil {
 			return
 		}
