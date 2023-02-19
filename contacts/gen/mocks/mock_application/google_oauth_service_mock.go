@@ -9,10 +9,10 @@ import (
 	reflect "reflect"
 	time "time"
 
+	gomock "github.com/golang/mock/gomock"
 	application "github.com/simplycubed/contactkarma/contacts/application"
 	domain "github.com/simplycubed/contactkarma/contacts/domain"
 	models "github.com/simplycubed/contactkarma/contacts/gen-jobs/models"
-	gomock "github.com/golang/mock/gomock"
 	oauth2 "golang.org/x/oauth2"
 	oauth20 "google.golang.org/api/oauth2/v1"
 	people "google.golang.org/api/people/v1"
@@ -39,6 +39,20 @@ func NewMockIContactSource(ctrl *gomock.Controller) *MockIContactSource {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockIContactSource) EXPECT() *MockIContactSourceMockRecorder {
 	return m.recorder
+}
+
+// Delete mocks base method.
+func (m *MockIContactSource) Delete(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactIds []domain.ContactID) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, userId, sourceId, contactIds)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockIContactSourceMockRecorder) Delete(ctx, userId, sourceId, contactIds interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIContactSource)(nil).Delete), ctx, userId, sourceId, contactIds)
 }
 
 // Puller mocks base method.
@@ -84,17 +98,17 @@ func (mr *MockIContactSourceMockRecorder) Remove(ctx, userId, sourceId, contactI
 }
 
 // Update mocks base method.
-func (m *MockIContactSource) Update(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactId domain.ContactID, unified domain.Unified) error {
+func (m *MockIContactSource) Update(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, updates []domain.ContactSourceUpdate) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", ctx, userId, sourceId, contactId, unified)
+	ret := m.ctrl.Call(m, "Update", ctx, userId, sourceId, updates)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockIContactSourceMockRecorder) Update(ctx, userId, sourceId, contactId, unified interface{}) *gomock.Call {
+func (mr *MockIContactSourceMockRecorder) Update(ctx, userId, sourceId, updates interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIContactSource)(nil).Update), ctx, userId, sourceId, contactId, unified)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIContactSource)(nil).Update), ctx, userId, sourceId, updates)
 }
 
 // MockIContactSourcePuller is a mock of IContactSourcePuller interface.
@@ -317,6 +331,50 @@ func (m *MockPeopleService) EXPECT() *MockPeopleServiceMockRecorder {
 	return m.recorder
 }
 
+// BatchDelete mocks base method.
+func (m *MockPeopleService) BatchDelete(personIds []string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BatchDelete", personIds)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// BatchDelete indicates an expected call of BatchDelete.
+func (mr *MockPeopleServiceMockRecorder) BatchDelete(personIds interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BatchDelete", reflect.TypeOf((*MockPeopleService)(nil).BatchDelete), personIds)
+}
+
+// BatchGet mocks base method.
+func (m *MockPeopleService) BatchGet(personIds []string) (*people.GetPeopleResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BatchGet", personIds)
+	ret0, _ := ret[0].(*people.GetPeopleResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BatchGet indicates an expected call of BatchGet.
+func (mr *MockPeopleServiceMockRecorder) BatchGet(personIds interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BatchGet", reflect.TypeOf((*MockPeopleService)(nil).BatchGet), personIds)
+}
+
+// BatchUpdate mocks base method.
+func (m *MockPeopleService) BatchUpdate(updates map[string]people.Person) (*people.BatchUpdateContactsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BatchUpdate", updates)
+	ret0, _ := ret[0].(*people.BatchUpdateContactsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BatchUpdate indicates an expected call of BatchUpdate.
+func (mr *MockPeopleServiceMockRecorder) BatchUpdate(updates interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BatchUpdate", reflect.TypeOf((*MockPeopleService)(nil).BatchUpdate), updates)
+}
+
 // Get mocks base method.
 func (m *MockPeopleService) Get(personId string) (*people.Person, error) {
 	m.ctrl.T.Helper()
@@ -434,4 +492,41 @@ func (m *MockPullContactPublisher) Publish(ctx context.Context, job models.PullC
 func (mr *MockPullContactPublisherMockRecorder) Publish(ctx, job interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Publish", reflect.TypeOf((*MockPullContactPublisher)(nil).Publish), ctx, job)
+}
+
+// MockContactSourceDeletedPublisher is a mock of ContactSourceDeletedPublisher interface.
+type MockContactSourceDeletedPublisher struct {
+	ctrl     *gomock.Controller
+	recorder *MockContactSourceDeletedPublisherMockRecorder
+}
+
+// MockContactSourceDeletedPublisherMockRecorder is the mock recorder for MockContactSourceDeletedPublisher.
+type MockContactSourceDeletedPublisherMockRecorder struct {
+	mock *MockContactSourceDeletedPublisher
+}
+
+// NewMockContactSourceDeletedPublisher creates a new mock instance.
+func NewMockContactSourceDeletedPublisher(ctrl *gomock.Controller) *MockContactSourceDeletedPublisher {
+	mock := &MockContactSourceDeletedPublisher{ctrl: ctrl}
+	mock.recorder = &MockContactSourceDeletedPublisherMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockContactSourceDeletedPublisher) EXPECT() *MockContactSourceDeletedPublisherMockRecorder {
+	return m.recorder
+}
+
+// Publish mocks base method.
+func (m *MockContactSourceDeletedPublisher) Publish(ctx context.Context, job models.ContactSourceDeleted) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Publish", ctx, job)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Publish indicates an expected call of Publish.
+func (mr *MockContactSourceDeletedPublisherMockRecorder) Publish(ctx, job interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Publish", reflect.TypeOf((*MockContactSourceDeletedPublisher)(nil).Publish), ctx, job)
 }

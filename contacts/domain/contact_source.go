@@ -3,8 +3,8 @@ package domain
 import (
 	"time"
 
-	"github.com/simplycubed/contactkarma/contacts/gen/models"
 	"github.com/go-openapi/strfmt"
+	"github.com/simplycubed/contactkarma/contacts/gen/models"
 )
 
 type Source string
@@ -56,4 +56,9 @@ func (docs ContactSources) MapToDto() (dto []*models.ContactSource) {
 		dto = append(dto, doc.MapToDto())
 	}
 	return
+}
+
+type ContactSourceUpdate struct {
+	ContactId ContactID
+	Unified   Unified
 }

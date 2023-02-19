@@ -17,7 +17,11 @@ import (
 )
 
 type IContactSource interface {
-	Update(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactId domain.ContactID, unified domain.Unified) (err error)
+	// Update() updates contact documents in contacts subcollection under contact source and updates the remote
+	Update(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, updates []domain.ContactSourceUpdate) (err error)
+
+	// Delete() deletes a contact documents in contacts subcollection under contact source and deletes it from remote
+	Delete(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactIds []domain.ContactID) (err error)
 
 	// puller return a new contacts puller.
 	Puller(ctx context.Context, userId domain.UserID, source domain.ContactSource) (puller IContactSourcePuller)
@@ -55,10 +59,14 @@ type GoogleOAuthService interface {
 	GetConfig() (config *oauth2.Config)
 }
 
+// TODO: move PeopleService to google contact source package
 type PeopleService interface {
 	List(pageToken *string) (resp *people.ListConnectionsResponse, err error)
 	Update(personId string, person *people.Person) (updated *people.Person, err error)
 	Get(personId string) (person *people.Person, err error)
+	BatchGet(personIds []string) (response *people.GetPeopleResponse, err error)
+	BatchUpdate(updates map[string]people.Person) (response *people.BatchUpdateContactsResponse, err error)
+	BatchDelete(personIds []string) (err error)
 }
 
 type PeopleServiceFactory interface {
@@ -69,7 +77,7 @@ type ContactSourceService struct {
 	googleOAuthService            GoogleOAuthService
 	contactSourceRepo             repository.IContactSource
 	pullContactSourcePublisher    PullContactPublisher
-	unifiedContactSyncer          IUnifiedSyncer
+	unifiedContactService         IUnifiedContactService
 	userRepo                      repository.IUser
 	contactSourceProvider         IContactSourceProvider
 	contactSourceDeletedPublisher ContactSourceDeletedPublisher
@@ -88,7 +96,7 @@ func NewContactSourceService(
 	googleOAuthService GoogleOAuthService,
 	contactSourceRepo repository.IContactSource,
 	pullContactSourcePublisher PullContactPublisher,
-	unifiedContactSyncer IUnifiedSyncer,
+	unifiedContactService IUnifiedContactService,
 	userRepo repository.IUser,
 	contactSourceProvider IContactSourceProvider,
 	unifiedRepo repository.IUnified,
@@ -98,7 +106,7 @@ func NewContactSourceService(
 		googleOAuthService:            googleOAuthService,
 		contactSourceRepo:             contactSourceRepo,
 		pullContactSourcePublisher:    pullContactSourcePublisher,
-		unifiedContactSyncer:          unifiedContactSyncer,
+		unifiedContactService:         unifiedContactService,
 		userRepo:                      userRepo,
 		contactSourceProvider:         contactSourceProvider,
 		unifiedRepo:                   unifiedRepo,
@@ -243,6 +251,17 @@ func (s *ContactSourceService) SyncContacts(ctx context.Context, userId domain.U
 	}
 	puller := s.contactSourceProvider.Get(contactSource.Source).Puller(ctx, userId, contactSource)
 
+	totalContactAdded := 0
+	totalContactDeleted := 0
+
+	defer func() {
+		// update quota
+		quotaUpdateError := s.updateQuota(ctx, userId, totalContactAdded-totalContactDeleted)
+		if err == nil {
+			err = quotaUpdateError
+		}
+	}()
+
 	for {
 		var newContacts, updatedContacts, deletedContacts []domain.Contact
 		newContacts, updatedContacts, deletedContacts, err = puller.Pull(ctx)
@@ -256,23 +275,125 @@ func (s *ContactSourceService) SyncContacts(ctx context.Context, userId domain.U
 
 		for _, contact := range newContacts {
 			//create  unified contact
-			_, err = s.unifiedContactSyncer.SyncContactToUnified(ctx, userId, domain.Google, sourceId, domain.ContactID(contact.ID), contact)
+			_, err = s.unifiedContactService.Add(ctx, userId, contactSource.Source, sourceId, domain.ContactID(contact.ID), contact)
 			if err != nil {
 				return
 			}
+			totalContactAdded++
 		}
 
-		for _, contact := range updatedContacts {
-			log.Println(contact.ID)
-			// TODO: update unified contact and propogate update to other linked contact sources
+		err = s.propogateUpdates(ctx, userId, contactSource, sourceId, updatedContacts)
+		if err != nil {
+			return
 		}
 
-		for _, contact := range deletedContacts {
-			log.Println(contact.ID)
-			// TODO: delete unified contact and propogate delete to other linked contact sources
+		err = s.propogateDeletes(ctx, userId, contactSource, sourceId, deletedContacts)
+		if err != nil {
+			return
 		}
-
+		totalContactDeleted += len(deletedContacts)
 	}
+}
+
+func (s *ContactSourceService) updateQuota(ctx context.Context, userId domain.UserID, change int) (err error) {
+	// TODO: use transaction to update quota
+	user, err := s.userRepo.GetUserByID(ctx, userId)
+	user.AddToTotalContacts(int64(change))
+	err = s.userRepo.UpdateUser(ctx, userId, *user)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// propogateUpdates applies update to unified documents, then to other sources linked to them
+func (s *ContactSourceService) propogateUpdates(ctx context.Context, userId domain.UserID, updatedContactSource domain.ContactSource, updatedSourceId domain.ContactSourceID, updatedContacts []domain.Contact) (err error) {
+	updateGroups := map[domain.ContactSourceID][]domain.ContactSourceUpdate{}
+	for _, contact := range updatedContacts {
+		contactOrigin := domain.NewContactOrigin(updatedContactSource.Source, updatedSourceId, contact.ID)
+		// apply update to unified document
+		unifiedContact, updateError := s.updateUnifiedContact(ctx, userId, contactOrigin, contact)
+		if updateError != nil {
+			return updateError
+		}
+		// group updates to other sources
+		for origin := range unifiedContact.Origins {
+			currentOrigin := domain.ContactOrigin(origin)
+			if currentOrigin == contactOrigin {
+				// ignore this origin
+				continue
+			}
+			updates, ok := updateGroups[currentOrigin.SourceId()]
+			if ok {
+				updateGroups[currentOrigin.SourceId()] = append(updates, domain.ContactSourceUpdate{ContactId: currentOrigin.ContactId(), Unified: unifiedContact})
+			} else {
+				updateGroups[currentOrigin.SourceId()] = []domain.ContactSourceUpdate{{ContactId: currentOrigin.ContactId(), Unified: unifiedContact}}
+			}
+		}
+	}
+
+	for sourceId, updates := range updateGroups {
+		contactSource, contactSourceError := s.contactSourceRepo.GetById(ctx, userId, sourceId)
+		if contactSourceError != nil {
+			return contactSourceError
+		}
+		// apply updates to source and remotes
+		err = s.contactSourceProvider.Get(contactSource.Source).Update(ctx, userId, sourceId, updates)
+		if err != nil {
+			return
+		}
+	}
+	return
+}
+
+func (s *ContactSourceService) propogateDeletes(ctx context.Context, userId domain.UserID, updatedContactSource domain.ContactSource, updatedSourceId domain.ContactSourceID, deletedContacts []domain.Contact) (err error) {
+	deleteGroups := map[domain.ContactSourceID][]domain.ContactID{}
+	unifiedIdsToDelete := []domain.UnifiedId{}
+	for _, contact := range deletedContacts {
+		contactOrigin := domain.NewContactOrigin(updatedContactSource.Source, updatedSourceId, contact.ID)
+		// apply update to unified document
+		unifiedContact, contactErr := s.unifiedRepo.GetContactByOrigin(ctx, userId, contactOrigin)
+		if contactErr != nil {
+			return contactErr
+		}
+		unifiedIdsToDelete = append(unifiedIdsToDelete, unifiedContact.ID)
+		// group updates to other sources
+		for origin := range unifiedContact.Origins {
+			currentOrigin := domain.ContactOrigin(origin)
+			if currentOrigin == contactOrigin {
+				// ignore this origin
+				continue
+			}
+			updates, ok := deleteGroups[currentOrigin.SourceId()]
+			if ok {
+				deleteGroups[currentOrigin.SourceId()] = append(updates, currentOrigin.ContactId())
+			} else {
+				deleteGroups[currentOrigin.SourceId()] = []domain.ContactID{currentOrigin.ContactId()}
+			}
+		}
+	}
+	for sourceId, updates := range deleteGroups {
+		contactSource, contactSourceError := s.contactSourceRepo.GetById(ctx, userId, sourceId)
+		if contactSourceError != nil {
+			return contactSourceError
+		}
+		err = s.contactSourceProvider.Get(contactSource.Source).Delete(ctx, userId, sourceId, updates)
+		if err != nil {
+			return
+		}
+	}
+	err = s.unifiedRepo.BulkDeleteContacts(ctx, userId, unifiedIdsToDelete)
+	return
+}
+
+func (s *ContactSourceService) updateUnifiedContact(ctx context.Context, userId domain.UserID, origin domain.ContactOrigin, contact domain.Contact) (unifiedContact domain.Unified, err error) {
+	unifiedContact, err = s.unifiedRepo.GetContactByOrigin(ctx, userId, origin)
+	if err == repository.ErrContactNotFound {
+		return
+	}
+	unifiedContact.SetUpdates(contact)
+	err = s.unifiedRepo.UpdateContact(ctx, userId, unifiedContact.ID, &unifiedContact)
+	return
 }
 
 func (s *ContactSourceService) PullContacts(ctx context.Context) (err error) {

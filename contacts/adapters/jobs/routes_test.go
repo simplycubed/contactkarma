@@ -10,6 +10,8 @@ import (
 
 	googleFirestore "cloud.google.com/go/firestore"
 	googlePubsub "cloud.google.com/go/pubsub"
+	"github.com/go-openapi/strfmt"
+	"github.com/golang/mock/gomock"
 	"github.com/simplycubed/contactkarma/contacts/adapters"
 	"github.com/simplycubed/contactkarma/contacts/adapters/contactsource/defaultcontactsource"
 	"github.com/simplycubed/contactkarma/contacts/adapters/firestore"
@@ -21,8 +23,6 @@ import (
 	"github.com/simplycubed/contactkarma/contacts/gen-jobs/models"
 	"github.com/simplycubed/contactkarma/contacts/gen/mocks/mock_application"
 	"github.com/simplycubed/contactkarma/contacts/test/testutils"
-	"github.com/go-openapi/strfmt"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
@@ -256,7 +256,7 @@ func TestUnifiedSync(t *testing.T) {
 	sourceId := domain.ContactSourceID("test-source-1")
 	contactId := domain.ContactID("test-contact-1")
 
-	_, err := testContext.unifiedService.SyncContactToUnified(ctx, userId, domain.Default, sourceId, contactId, contact)
+	_, err := testContext.unifiedService.Add(ctx, userId, domain.Default, sourceId, contactId, contact)
 	assert.Equal(t, nil, err)
 	createContact, err := testContext.unifiedRepo.GetContactByOrigin(ctx, userId, domain.NewContactOrigin(domain.Default, sourceId, contactId))
 	assert.Equal(t, nil, err)
@@ -289,7 +289,7 @@ func TestUnifiedSync(t *testing.T) {
 			},
 		},
 	}
-	_, err = testContext.unifiedService.SyncContactToUnified(ctx, userId, domain.Default, sourceId, domain.ContactID("test-contact-2"), contact)
+	_, err = testContext.unifiedService.Add(ctx, userId, domain.Default, sourceId, domain.ContactID("test-contact-2"), contact)
 	assert.Equal(t, nil, err)
 
 	suggestions, err = testContext.linkSuggestionRepo.GetAll(ctx, userId)
@@ -318,7 +318,7 @@ func TestUnifiedSync(t *testing.T) {
 			},
 		},
 	}
-	_, err = testContext.unifiedService.SyncContactToUnified(ctx, userId, domain.Default, sourceId, domain.ContactID("test-contact-3"), contact)
+	_, err = testContext.unifiedService.Add(ctx, userId, domain.Default, sourceId, domain.ContactID("test-contact-3"), contact)
 	assert.Equal(t, nil, err)
 
 	suggestions, err = testContext.linkSuggestionRepo.GetAll(ctx, userId)
@@ -364,7 +364,7 @@ func TestDeleteContactSourceJob_RemoveUnifiedFalse(t *testing.T) {
 	createdContact, err := testContext.defaultContactFirestore.SaveContact(ctx, userId, contact)
 	assert.Equal(t, nil, err)
 
-	createUnified, err := testContext.unifiedService.SyncContactToUnified(ctx, userId, domain.Default, sourceId, createdContact.ID, contact)
+	createUnified, err := testContext.unifiedService.Add(ctx, userId, domain.Default, sourceId, createdContact.ID, contact)
 	assert.Equal(t, nil, err)
 
 	request := models.ContactSourceDeleted{
@@ -436,7 +436,7 @@ func TestDeleteContactSourceJob_RemoveUnifiedTrue(t *testing.T) {
 	createdContact, err := testContext.defaultContactFirestore.SaveContact(ctx, userId, contact)
 	assert.Equal(t, nil, err)
 
-	createUnified, err := testContext.unifiedService.SyncContactToUnified(ctx, userId, domain.Default, sourceId, createdContact.ID, contact)
+	createUnified, err := testContext.unifiedService.Add(ctx, userId, domain.Default, sourceId, createdContact.ID, contact)
 	assert.Equal(t, nil, err)
 
 	request := models.ContactSourceDeleted{

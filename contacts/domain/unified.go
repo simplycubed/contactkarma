@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/simplycubed/contactkarma/contacts/gen/models"
 	"github.com/go-openapi/strfmt"
+	"github.com/simplycubed/contactkarma/contacts/gen/models"
 )
 
 type UnifiedId string
@@ -708,7 +708,7 @@ func (contact *Unified) FromUpdateDto(dto *models.UpdateUnifiedDto) {
 
 }
 
-//https://simplycubed.slack.com/archives/C03404BM7CK/p1661501428468729
+// https://simplycubed.slack.com/archives/C03404BM7CK/p1661501428468729
 func (contact *Unified) ComputeDisplayName() string {
 	if len(contact.Names) > 0 {
 		userName := contact.Names[0]
@@ -886,6 +886,25 @@ func (contact *Unified) FromContact(dto Contact, sourceId ContactOrigin) {
 		contact.DisplayName = contact.ComputeDisplayName()
 	}
 
+}
+
+func (contact *Unified) SetUpdates(dto Contact) {
+	contact.Addresses = dto.Addresses
+	contact.Birthdays = dto.Birthdays
+	contact.EmailAddresses = dto.EmailAddresses
+	contact.Genders = dto.Genders
+	contact.Names = dto.Names
+	contact.Nicknames = dto.Nicknames
+	contact.Occupations = dto.Occupations
+	contact.Organizations = dto.Organizations
+	contact.PhoneNumbers = dto.PhoneNumbers
+	contact.Photos = dto.Photos
+	contact.Relations = dto.Relations
+	contact.Urls = dto.Urls
+	contact.SearchTerms = contact.ComputeSearchTerms()
+	if contact.DisplayName == "" {
+		contact.DisplayName = contact.ComputeDisplayName()
+	}
 }
 
 type UnifiedContacts []Unified

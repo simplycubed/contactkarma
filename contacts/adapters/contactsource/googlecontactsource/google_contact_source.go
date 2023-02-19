@@ -34,7 +34,7 @@ func NewGoogleContactSource(
 }
 
 // Google person update: https://developers.google.com/people/api/rest/v1/people/updateContact?hl=en
-func (source *GoogleContactSource) Update(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactId domain.ContactID, unified domain.Unified) (err error) {
+func (source *GoogleContactSource) Update(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, updates []domain.ContactSourceUpdate) (err error) {
 
 	// apply update to source, then firestore
 	contactSource, err := source.contactSourceRepo.GetById(ctx, userId, sourceId)
@@ -43,24 +43,57 @@ func (source *GoogleContactSource) Update(ctx context.Context, userId domain.Use
 	}
 
 	peopleService := source.peopleServiceFactory.New(ctx, contactSource.AccessToken, contactSource.RefreshToken, contactSource.TokenExpiry)
-	person := MapPerson(unified)
 
-	// fetch latest etag from person
-	personBeforeUpdate, err := peopleService.Get("people/" + string(contactId))
+	personIds := []string{}
+	for _, update := range updates {
+		personIds = append(personIds, "people/"+string(update.ContactId))
+	}
+	batchGetResponse, err := peopleService.BatchGet(personIds)
+	if err != nil {
+		return
+	}
+	personMap := map[string]*people.Person{}
+	for _, person := range batchGetResponse.Responses {
+		personId := strings.ReplaceAll(person.Person.ResourceName, "people/", "")
+		personMap[personId] = person.Person
+	}
+
+	updatesMap := map[string]people.Person{}
+	for _, update := range updates {
+		personBeforeUpdate := personMap[string(update.ContactId)]
+		person := MapPerson(update.Unified)
+		person.Etag = personBeforeUpdate.Etag
+		updatesMap["people/"+string(update.ContactId)] = *person
+	}
+	response, err := peopleService.BatchUpdate(updatesMap)
+	if err != nil {
+		return
+	}
+	// TODO: bulk update repo
+	for _, update := range response.UpdateResult {
+		contact := domain.GoogleContact{}
+		contact.FromGooglePerson(update.Person)
+		err = source.repo.Update(ctx, userId, sourceId, contact.ID.String(), contact)
+		if err != nil {
+			return
+		}
+	}
+	return
+}
+
+func (source *GoogleContactSource) Delete(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactIds []domain.ContactID) (err error) {
+	// apply update to source, then firestore
+	contactSource, err := source.contactSourceRepo.GetById(ctx, userId, sourceId)
 	if err != nil {
 		return
 	}
 
-	person.Etag = personBeforeUpdate.Etag
-	updated, err := peopleService.Update("people/"+string(contactId), person)
-	if err != nil {
-		return
+	peopleService := source.peopleServiceFactory.New(ctx, contactSource.AccessToken, contactSource.RefreshToken, contactSource.TokenExpiry)
+	personIds := []string{}
+	for _, contactId := range contactIds {
+		personIds = append(personIds, "people/"+contactId.String())
 	}
-
-	contact := domain.GoogleContact{}
-	contact.FromGooglePerson(updated)
-	contact.ID = domain.ContactID(contactId)
-	err = source.repo.Update(ctx, userId, sourceId, string(contactId), contact)
+	err = peopleService.BatchDelete(personIds)
 	return
 }
 

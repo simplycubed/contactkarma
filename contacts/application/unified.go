@@ -9,11 +9,17 @@ import (
 	"github.com/simplycubed/contactkarma/contacts/gen/models"
 )
 
-type IUnifiedSyncer interface {
-	SyncContactToUnified(ctx context.Context, userId domain.UserID, source domain.Source, sourceId domain.ContactSourceID, contactId domain.ContactID, contact domain.Contact) (unified *domain.Unified, err error)
-}
+// type IUnifiedSyncer interface {
+
+// 	// Update() updates a contact in unified collection and propogates update to all linked sources
+// 	Update(ctx context.Context, userId domain.UserID, source domain.Source, sourceId domain.ContactSourceID, contactId domain.ContactID, contact domain.Contact) (unified *domain.Unified, err error)
+
+// 	// Delete() deletes a contact in unified collection and propogates delete to all linked sources
+// 	Delete(ctx context.Context, userId domain.UserID, source domain.Source, sourceId domain.ContactSourceID, contactId domain.ContactID) (err error)
+// }
 
 type IUnifiedContactService interface {
+	Add(ctx context.Context, userId domain.UserID, source domain.Source, sourceId domain.ContactSourceID, contactId domain.ContactID, contact domain.Contact) (unified *domain.Unified, err error)
 	GetContacts(ctx context.Context, id domain.UserID, limit int, lastDocumentId *domain.UnifiedId) ([]*models.Unified, error)
 	GetPendingContacts(ctx context.Context, id domain.UserID, limit int, lastDocumentInstant *time.Time, lastDocumentId *domain.UnifiedId) ([]*models.Unified, error)
 	GetRecentContacts(ctx context.Context, uid domain.UserID, maxDays *int64, limit int, lastDocumentInstant *time.Time, lastDocumentId *domain.UnifiedId) ([]*models.Unified, error)
@@ -22,6 +28,7 @@ type UnifiedContactService struct {
 	unifiedRepo           repository.IUnified
 	linkSuggestionService ILinkSuggestionService
 	contactLogRepo        repository.IContactLog
+	contactSourceProvider IContactSourceProvider
 }
 
 func NewUnifiedContactService(unifiedRepo repository.IUnified, linkSuggestionService ILinkSuggestionService, contactLogRepo repository.IContactLog) *UnifiedContactService {
@@ -62,7 +69,7 @@ func (a *UnifiedContactService) GetRecentContacts(ctx context.Context, uID domai
 	return
 }
 
-func (s *UnifiedContactService) SyncContactToUnified(ctx context.Context, userId domain.UserID, source domain.Source, sourceId domain.ContactSourceID, contactId domain.ContactID, contact domain.Contact) (createdUnified *domain.Unified, err error) {
+func (s *UnifiedContactService) Add(ctx context.Context, userId domain.UserID, source domain.Source, sourceId domain.ContactSourceID, contactId domain.ContactID, contact domain.Contact) (createdUnified *domain.Unified, err error) {
 	origin := domain.NewContactOrigin(source, sourceId, contactId)
 	_, err = s.unifiedRepo.GetContactByOrigin(ctx, userId, origin)
 	if err == repository.ErrContactNotFound {

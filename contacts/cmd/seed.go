@@ -1,6 +1,5 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -94,7 +93,7 @@ func (s *Seeder) AddContacts(count int, userId domain.UserID) (err error) {
 			return
 		}
 		var unifiedContact *domain.Unified
-		unifiedContact, err = s.unifiedContactService.SyncContactToUnified(context.Background(), userId, domain.Google, domain.ContactSourceID(domain.Default), domain.ContactID(contact.ID), *contact)
+		unifiedContact, err = s.unifiedContactService.Add(context.Background(), userId, domain.Google, domain.ContactSourceID(domain.Default), domain.ContactID(contact.ID), *contact)
 		if err != nil {
 			return
 		}

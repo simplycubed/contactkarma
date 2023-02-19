@@ -237,6 +237,34 @@ func (u DefaultContactsFirestore) UpdateContact(ctx context.Context, uID domain.
 	return nil
 }
 
+func (store *DefaultContactsFirestore) BulkUpdateContacts(ctx context.Context, uID domain.UserID, updates map[domain.ContactID]*domain.Contact) (err error) {
+	batch := store.client.Batch()
+	currentSize := 0
+	batchSize := 250
+	for contactId, update := range updates {
+		ref := store.collectionRef(uID).Doc(contactId.String())
+		updates := store.getUpdates(update)
+		batch.Update(ref, updates)
+		currentSize++
+		if currentSize == batchSize {
+			_, err = batch.Commit(ctx)
+			if err != nil {
+				return
+			}
+			// reset batch
+			currentSize = 0
+			batch = store.client.Batch()
+		}
+	}
+	if currentSize > 0 {
+		_, err = batch.Commit(ctx)
+		if err != nil {
+			return
+		}
+	}
+	return
+}
+
 func (u *DefaultContactsFirestore) GetContactsByNextContact(ctx context.Context, uID domain.UserID, before time.Time, limit int, lastDocumentInstant *time.Time, lastDocumentId *domain.ContactID) ([]domain.Contact, error) {
 	query := u.collectionRef(uID).
 		WherePath(firestore.FieldPath{"next_contact"}, "<", before).

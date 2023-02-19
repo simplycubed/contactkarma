@@ -16,11 +16,15 @@ func NewDefaultContactSource(repo *firestore.DefaultContactsFirestore) *DefaultC
 	return &DefaultContactSource{repo: repo}
 }
 
-func (source *DefaultContactSource) Update(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactId domain.ContactID, unified domain.Unified) (err error) {
-	contact := domain.Contact{}
-	contact.FromUnified(unified)
-	contact.ID = domain.ContactID(contactId)
-	err = source.repo.UpdateContact(ctx, userId, contactId, &contact)
+func (source *DefaultContactSource) Update(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, updates []domain.ContactSourceUpdate) (err error) {
+	updateMap := map[domain.ContactID]*domain.Contact{}
+	for _, update := range updates {
+		contact := domain.Contact{}
+		contact.FromUnified(update.Unified)
+		contact.ID = domain.ContactID(update.ContactId)
+		updateMap[update.ContactId] = &contact
+	}
+	err = source.repo.BulkUpdateContacts(ctx, userId, updateMap)
 	return
 }
 
@@ -34,5 +38,9 @@ func (source *DefaultContactSource) Reader(ctx context.Context, userId domain.Us
 }
 
 func (source *DefaultContactSource) Remove(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactIds []domain.ContactID) (err error) {
+	return source.repo.BulkDeleteContacts(ctx, userId, contactIds)
+}
+
+func (source *DefaultContactSource) Delete(ctx context.Context, userId domain.UserID, sourceId domain.ContactSourceID, contactIds []domain.ContactID) (err error) {
 	return source.repo.BulkDeleteContacts(ctx, userId, contactIds)
 }
